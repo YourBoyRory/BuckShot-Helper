@@ -2,7 +2,7 @@ import sys
 import random
 import os
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QFont
+from PyQt5.QtGui import QFont, QCursor
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QSpinBox, QHBoxLayout, QLineEdit, QPushButton, QGridLayout
 
 class NumberSelectorApp(QWidget):
@@ -87,6 +87,17 @@ class NumberSelectorApp(QWidget):
         self.lives_spinbox.setValue(0)
         self.blanks_spinbox.setValue(0)
 
+    def mousePressEvent(self, event):
+        mouse_pos = QCursor.pos()
+        widget = self.childAt(self.mapFromGlobal(mouse_pos))
+        blueStyle = "color: #72a4d4; font-size: 16px;"
+        redStyle = "color: #d47273; font-size: 16px;"
+        if widget in self.buttons:
+            if widget.text() == "⁈":
+                self.set_button_letter(widget, "⁉")
+            else:
+                self.set_button_letter(widget, "⁈")
+
     def on_button_click(self, button_index):
         button = self.buttons[button_index]
         if button.text() == "#":
@@ -103,6 +114,10 @@ class NumberSelectorApp(QWidget):
             button.setStyleSheet("color: #d47273; font-size: 16px;")
         elif letter == "B":
             button.setStyleSheet("color: #72a4d4; font-size: 16px;")
+        elif letter == "⁈": 
+            button.setStyleSheet("color: #d47273; font-size: 14px;")
+        elif letter == "⁉": 
+            button.setStyleSheet("color: #72a4d4; font-size: 14px;")
         else:
             button.setStyleSheet("color: grey; font-size: 16px;")
         
