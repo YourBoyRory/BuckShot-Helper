@@ -100,9 +100,9 @@ class NumberSelectorApp(QWidget):
 
     def on_button_click(self, button_index):
         button = self.buttons[button_index]
-        if button.text() == "#":
+        if button.text() == "#" or button.text() == "⁈":
             self.set_button_letter(button, "L")
-        elif button.text() == "L":
+        elif button.text() == "L" or button.text() == "⁉":
             self.set_button_letter(button, "B")
         else:
             self.set_button_letter(button, "#")
