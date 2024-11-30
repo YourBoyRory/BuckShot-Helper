@@ -1,4 +1,6 @@
 import sys
+import random
+import os
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QSpinBox, QHBoxLayout, QLineEdit, QPushButton, QGridLayout
@@ -11,7 +13,10 @@ class NumberSelectorApp(QWidget):
         self.init_ui()
 
     def init_ui(self):
-        self.setWindowTitle('BuckShot Helper')
+        if random.randint(0, 9) == 0:
+            self.setWindowTitle('BackShot Helper')
+        else:
+            self.setWindowTitle('BuckShot Helper')
         self.setGeometry(100, 100, 200, 200)  # Adjusted size to fit buttons
         self.setMaximumSize(500, 300)
 
@@ -26,17 +31,21 @@ class NumberSelectorApp(QWidget):
         self.lives_spinbox.setRange(0, 10)  # Set range of lives between 0 and 10
         self.lives_spinbox.setValue(0)  # Default value for Lives
         self.lives_spinbox.valueChanged.connect(self.on_spinbox_value_changed)
+        self.lives_spinbox.setMinimumHeight(40)
+        self.lives_spinbox.setStyleSheet("font-size: 16px;")
         lives_layout.addWidget(lives_label)
         lives_layout.addWidget(self.lives_spinbox)
         self.last_lives_value = self.lives_spinbox.value()
         self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
         self.setWindowFlags(self.windowFlags() & ~Qt.WindowMaximizeButtonHint)
-
+            
         # Create Blanks section
         blanks_layout = QHBoxLayout()
         blanks_label = QLabel('Blanks:')
         self.blanks_spinbox = QSpinBox()
         self.blanks_spinbox.setRange(0, 10)  # Set range of blanks between 0 and 10
+        self.blanks_spinbox.setMinimumHeight(40)
+        self.blanks_spinbox.setStyleSheet("font-size: 16px;")
         self.blanks_spinbox.setValue(0)  # Default value for Blanks
         self.blanks_spinbox.valueChanged.connect(self.on_spinbox_value_changed)
         blanks_layout.addWidget(blanks_label)
@@ -55,6 +64,7 @@ class NumberSelectorApp(QWidget):
             button_layout.addWidget(button, 0, i)
 
         clear_button = QPushButton('Clear')
+        clear_button.setStyleSheet("font-size: 16px;")
         clear_button.clicked.connect(self.clear)
 
         # Add layouts to the main layout
@@ -65,6 +75,13 @@ class NumberSelectorApp(QWidget):
 
         # Set the main layout of the window
         self.setLayout(main_layout)
+
+    def getAssetPath(self, file):
+        if getattr(sys, 'frozen', False):
+            base_path = sys._MEIPASS
+        else:
+            base_path = os.path.dirname(__file__)
+        return os.path.join(base_path, 'assets', file)
 
     def clear(self):
         self.lives_spinbox.setValue(0)
