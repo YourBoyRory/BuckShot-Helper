@@ -5,6 +5,13 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QCursor, QPalette
 from PyQt5.QtWidgets import QApplication, QWidget, QSpacerItem, QSizePolicy, QVBoxLayout, QLabel, QSpinBox, QHBoxLayout, QLineEdit, QPushButton, QGridLayout
 
+def getAssetPath(file):
+    if getattr(sys, 'frozen', False):
+        base_path = sys._MEIPASS
+    else:
+        base_path = os.path.dirname(__file__)
+    return os.path.join(base_path, 'styles', file)
+
 class NumberSelectorApp(QWidget):
     def __init__(self):
         super().__init__()
@@ -194,6 +201,7 @@ class NumberSelectorApp(QWidget):
             self.removed_from_order = ""
 
 def set_theme(app):
+    desktop = ""
     try:
         gtk_based = [
             "gnome", "lxde", "mate",
@@ -219,7 +227,15 @@ def set_theme(app):
     except:
         pass
     current_style = app.style().objectName()
-    print(f"Loaded Theme: {current_style}")
+    if desktop == "" or current_style == "windowsvista":
+        desktop = "windows"
+        try:
+            with open(getAssetPath("Adwaita-GTK4-Dark.qss"), "r") as f:
+                app.setStyleSheet(f.read())
+        except:
+            print("Failed to load darkmode")
+            pass
+    print(f"Loaded Theme: {current_style} on {desktop}")
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
