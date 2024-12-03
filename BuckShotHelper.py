@@ -134,7 +134,7 @@ class NumberSelectorApp(QWidget):
         elif letter == "⁉":
             button.setStyleSheet("color: #72a4d4; font-size: 16px; font-weight: bold;")
         elif letter == "?":
-            button.setStyleSheet("color: #ffffff; font-size: 16px; font-weight: bold;")
+            button.setStyleSheet("font-size: 16px; font-weight: bold;")
         else:
             button.setStyleSheet("color: #838383; font-size: 16px; font-weight: bold;")
 
@@ -232,13 +232,13 @@ def set_theme(app):
                 app.setStyle("Adwaita")
     except:
         pass
-    #desktop = ""
+    desktop = ""
     current_style = app.style().objectName()
     if desktop == "" or current_style == "windowsvista":
         desktop = "windows"
         app.setStyle("windows")
         try:
-            with open(getAssetPath("Adwaita-GTK4-Dark.css"), "r") as f:
+            with open(getAssetPath("Adwaita.qss"), "r") as f:
                 app.setStyleSheet(f.read())
         except:
             print("Failed to load darkmode")
