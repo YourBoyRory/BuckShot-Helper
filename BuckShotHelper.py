@@ -195,7 +195,12 @@ class NumberSelectorApp(QWidget):
 
 def set_theme(app):
     try:
-        if os.environ.get('DESKTOP_SESSION') == "gnome":
+        gtk_based = [
+            "gnome", "lxde", "mate",
+            "cinnamon", "ubuntu"
+        ]
+        desktop = os.environ.get('DESKTOP_SESSION')
+        if any(sub in desktop for sub in gtk_based):
             try:
                 import subprocess
                 result = subprocess.run(
