@@ -1,0 +1,35 @@
+/* General QWidget styling */
+
+QWidget {
+    border: 1px solid #393939;
+    border-radius: 10px; 
+    background-color: #393939; 
+    color: #f9fafa;
+}
+
+QWidget:disabled {
+    border: 1px solid #2d2d2d;
+    background-color: #2d2d2d;
+    color: #999999;
+}
+QWidget:focus {
+    border: 2px solid #587392;
+}
+
+QWidget#Frame {
+    background-color: #242424;
+    border: none;
+}
+
+QLabel {
+    background-color: #242424;
+    border: none;
+}
+
+QPushButton:hover {
+    background-color: #454545;
+}
+
+QPushButton:pressed {
+    background-color: #707070;
+}

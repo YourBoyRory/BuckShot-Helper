@@ -15,7 +15,7 @@ def getAssetPath(file):
 class NumberSelectorApp(QWidget):
     def __init__(self):
         super().__init__()
-
+        self.setObjectName("Frame") 
         # Initialize the UI
         self.init_ui()
 
@@ -37,36 +37,38 @@ class NumberSelectorApp(QWidget):
 
         # Create Lives section
         lives_layout = QHBoxLayout()
-        lives_label = QLabel('Lives')
-        lives_label.setStyleSheet("font-size: 16px; font-weight: bold;")
+        lives_label = QLabel('Lives:')
+        lives_label.setStyleSheet("font-size: 14px;")
+        lives_label.setFixedSize(70,40)
         self.lives_spinbox = QSpinBox()
         self.lives_spinbox.setRange(0, 10)  # Set range of lives between 0 and 10
         self.lives_spinbox.setValue(0)  # Default value for Lives
         self.lives_spinbox.valueChanged.connect(self.on_spinbox_value_changed)
         #self.lives_spinbox.setMinimumHeight(40)
-        self.lives_spinbox.setFixedSize(224,40)
-        self.lives_spinbox.setStyleSheet("font-size: 16px; font-weight: bold;")
+        self.lives_spinbox.setFixedSize(148,40)
+        self.lives_spinbox.setStyleSheet("font-size: 16px;")
         lives_layout.setAlignment(Qt.AlignLeft)
-        lives_layout.addWidget(self.lives_spinbox)
         lives_layout.addWidget(lives_label)
+        lives_layout.addWidget(self.lives_spinbox)
         self.last_lives_value = self.lives_spinbox.value()
         #lives_spacer = QSpacerItem(110, 40, QSizePolicy.Minimum)
         #lives_layout.addItem(lives_spacer)
 
         # Create Blanks section
         blanks_layout = QHBoxLayout()
-        blanks_label = QLabel('Blanks')
-        blanks_label.setStyleSheet("font-size: 16px; font-weight: bold;")
+        blanks_label = QLabel('Blanks:')
+        blanks_label.setStyleSheet("font-size: 14px;")
+        blanks_label.setFixedSize(70,40)
         self.blanks_spinbox = QSpinBox()
         self.blanks_spinbox.setRange(0, 10)  # Set range of blanks between 0 and 10
         #self.blanks_spinbox.setMinimumHeight(40)
-        self.blanks_spinbox.setFixedSize(224,40)
-        self.blanks_spinbox.setStyleSheet("font-size: 16px; font-weight: bold;")
+        self.blanks_spinbox.setFixedSize(148,40)
+        self.blanks_spinbox.setStyleSheet("font-size: 16px;")
         self.blanks_spinbox.setValue(0)  # Default value for Blanks
         self.blanks_spinbox.valueChanged.connect(self.on_spinbox_value_changed)
         blanks_layout.setAlignment(Qt.AlignLeft)
-        blanks_layout.addWidget(self.blanks_spinbox)
         blanks_layout.addWidget(blanks_label)
+        blanks_layout.addWidget(self.blanks_spinbox)
         #blanks_spacer = QSpacerItem(110, 40, QSizePolicy.Minimum)
         #blanks_layout.addItem(blanks_spacer)
         self.last_blanks_value = self.blanks_spinbox.value()
@@ -83,7 +85,7 @@ class NumberSelectorApp(QWidget):
             button_layout.addWidget(button, 0, i)
 
         clear_button = QPushButton('Clear')
-        clear_button.setStyleSheet("font-size: 16px; font-weight: bold;")
+        clear_button.setStyleSheet("font-size: 16px;")
         clear_button.setMinimumHeight(40)
         clear_button.clicked.connect(self.clear)
 
@@ -106,8 +108,10 @@ class NumberSelectorApp(QWidget):
         if widget in self.buttons:
             if widget.text() == "⁈":
                 self.set_button_letter(widget, "⁉")
-            else:
+            elif widget.text() == "?":
                 self.set_button_letter(widget, "⁈")
+            else:
+                self.set_button_letter(widget, "?")
 
     def on_button_click(self, button_index):
         button = self.buttons[button_index]
@@ -129,6 +133,8 @@ class NumberSelectorApp(QWidget):
             button.setStyleSheet("color: #d47273; font-size: 16px; font-weight: bold;")
         elif letter == "⁉":
             button.setStyleSheet("color: #72a4d4; font-size: 16px; font-weight: bold;")
+        elif letter == "?":
+            button.setStyleSheet("color: #ffffff; font-size: 16px; font-weight: bold;")
         else:
             button.setStyleSheet("color: #838383; font-size: 16px; font-weight: bold;")
 
@@ -226,11 +232,13 @@ def set_theme(app):
                 app.setStyle("Adwaita")
     except:
         pass
+    #desktop = ""
     current_style = app.style().objectName()
     if desktop == "" or current_style == "windowsvista":
         desktop = "windows"
+        app.setStyle("windows")
         try:
-            with open(getAssetPath("Adwaita-GTK4-Dark.qss"), "r") as f:
+            with open(getAssetPath("Adwaita-GTK4-Dark.css"), "r") as f:
                 app.setStyleSheet(f.read())
         except:
             print("Failed to load darkmode")
