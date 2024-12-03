@@ -232,7 +232,7 @@ def set_theme(app):
                 app.setStyle("Adwaita")
     except:
         pass
-    desktop = ""
+    #desktop = ""
     current_style = app.style().objectName()
     if desktop == "" or current_style == "windowsvista":
         desktop = "windows"
