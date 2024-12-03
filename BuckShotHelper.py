@@ -2,8 +2,8 @@ import sys
 import random
 import os
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QFont, QCursor
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QSpinBox, QHBoxLayout, QLineEdit, QPushButton, QGridLayout
+from PyQt5.QtGui import QFont, QCursor, QPalette
+from PyQt5.QtWidgets import QApplication, QWidget, QSpacerItem, QSizePolicy, QVBoxLayout, QLabel, QSpinBox, QHBoxLayout, QLineEdit, QPushButton, QGridLayout
 
 class NumberSelectorApp(QWidget):
     def __init__(self):
@@ -12,44 +12,56 @@ class NumberSelectorApp(QWidget):
         # Initialize the UI
         self.init_ui()
 
+
     def init_ui(self):
-        if random.randint(0, 9) == 0:
+        if random.randint(0, 99) == 0:
             self.setWindowTitle('BackShot Helper')
         else:
             self.setWindowTitle('BuckShot Helper')
-        self.setGeometry(100, 100, 200, 200)  # Adjusted size to fit buttons
-        self.setMaximumSize(500, 300)
+        #self.setGeometry(100, 100, 200, 200)  # Adjusted size to fit buttons
+        #self.setMaximumSize(500, 300)
+        self.setFixedSize(475,200)
+        self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
+        self.setWindowFlags(self.windowFlags() & ~Qt.WindowMaximizeButtonHint)
 
         # Create the main layout
         main_layout = QVBoxLayout()
         self.removed_from_order = ""
-        
+
         # Create Lives section
         lives_layout = QHBoxLayout()
-        lives_label = QLabel('Lives:')
+        lives_label = QLabel('Lives')
+        lives_label.setStyleSheet("font-size: 16px; font-weight: bold;")
         self.lives_spinbox = QSpinBox()
         self.lives_spinbox.setRange(0, 10)  # Set range of lives between 0 and 10
         self.lives_spinbox.setValue(0)  # Default value for Lives
         self.lives_spinbox.valueChanged.connect(self.on_spinbox_value_changed)
-        self.lives_spinbox.setMinimumHeight(40)
-        self.lives_spinbox.setStyleSheet("font-size: 16px;")
-        lives_layout.addWidget(lives_label)
+        #self.lives_spinbox.setMinimumHeight(40)
+        self.lives_spinbox.setFixedSize(224,40)
+        self.lives_spinbox.setStyleSheet("font-size: 16px; font-weight: bold;")
+        lives_layout.setAlignment(Qt.AlignLeft)
         lives_layout.addWidget(self.lives_spinbox)
+        lives_layout.addWidget(lives_label)
         self.last_lives_value = self.lives_spinbox.value()
-        self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
-        self.setWindowFlags(self.windowFlags() & ~Qt.WindowMaximizeButtonHint)
-            
+        #lives_spacer = QSpacerItem(110, 40, QSizePolicy.Minimum)
+        #lives_layout.addItem(lives_spacer)
+
         # Create Blanks section
         blanks_layout = QHBoxLayout()
-        blanks_label = QLabel('Blanks:')
+        blanks_label = QLabel('Blanks')
+        blanks_label.setStyleSheet("font-size: 16px; font-weight: bold;")
         self.blanks_spinbox = QSpinBox()
         self.blanks_spinbox.setRange(0, 10)  # Set range of blanks between 0 and 10
-        self.blanks_spinbox.setMinimumHeight(40)
-        self.blanks_spinbox.setStyleSheet("font-size: 16px;")
+        #self.blanks_spinbox.setMinimumHeight(40)
+        self.blanks_spinbox.setFixedSize(224,40)
+        self.blanks_spinbox.setStyleSheet("font-size: 16px; font-weight: bold;")
         self.blanks_spinbox.setValue(0)  # Default value for Blanks
         self.blanks_spinbox.valueChanged.connect(self.on_spinbox_value_changed)
-        blanks_layout.addWidget(blanks_label)
+        blanks_layout.setAlignment(Qt.AlignLeft)
         blanks_layout.addWidget(self.blanks_spinbox)
+        blanks_layout.addWidget(blanks_label)
+        #blanks_spacer = QSpacerItem(110, 40, QSizePolicy.Minimum)
+        #blanks_layout.addItem(blanks_spacer)
         self.last_blanks_value = self.blanks_spinbox.value()
 
         # Create Button Grid (10 buttons side by side)
@@ -58,13 +70,14 @@ class NumberSelectorApp(QWidget):
         for i in range(10):
             button = QPushButton(" ")
             button.setDisabled(True)
-            button.setMinimumWidth(40)
+            button.setFixedSize(40,40)
             button.clicked.connect(lambda _, i=i: self.on_button_click(i))
             self.buttons.append(button)
             button_layout.addWidget(button, 0, i)
 
         clear_button = QPushButton('Clear')
-        clear_button.setStyleSheet("font-size: 16px;")
+        clear_button.setStyleSheet("font-size: 16px; font-weight: bold;")
+        clear_button.setMinimumHeight(40)
         clear_button.clicked.connect(self.clear)
 
         # Add layouts to the main layout
@@ -76,13 +89,6 @@ class NumberSelectorApp(QWidget):
         # Set the main layout of the window
         self.setLayout(main_layout)
 
-    def getAssetPath(self, file):
-        if getattr(sys, 'frozen', False):
-            base_path = sys._MEIPASS
-        else:
-            base_path = os.path.dirname(__file__)
-        return os.path.join(base_path, 'assets', file)
-
     def clear(self):
         self.lives_spinbox.setValue(0)
         self.blanks_spinbox.setValue(0)
@@ -90,8 +96,6 @@ class NumberSelectorApp(QWidget):
     def mousePressEvent(self, event):
         mouse_pos = QCursor.pos()
         widget = self.childAt(self.mapFromGlobal(mouse_pos))
-        blueStyle = "color: #72a4d4; font-size: 16px;"
-        redStyle = "color: #d47273; font-size: 16px;"
         if widget in self.buttons:
             if widget.text() == "⁈":
                 self.set_button_letter(widget, "⁉")
@@ -106,21 +110,21 @@ class NumberSelectorApp(QWidget):
             self.set_button_letter(button, "B")
         else:
             self.set_button_letter(button, "#")
-            
-            
+
+
     def set_button_letter(self, button, letter):
         button.setText(letter)
         if letter == "L":
-            button.setStyleSheet("color: #d47273; font-size: 16px;")
+            button.setStyleSheet("color: #d47273; font-size: 16px; font-weight: bold;")
         elif letter == "B":
-            button.setStyleSheet("color: #72a4d4; font-size: 16px;")
-        elif letter == "⁈": 
-            button.setStyleSheet("color: #d47273; font-size: 14px;")
-        elif letter == "⁉": 
-            button.setStyleSheet("color: #72a4d4; font-size: 14px;")
+            button.setStyleSheet("color: #72a4d4; font-size: 16px; font-weight: bold;")
+        elif letter == "⁈":
+            button.setStyleSheet("color: #d47273; font-size: 16px; font-weight: bold;")
+        elif letter == "⁉":
+            button.setStyleSheet("color: #72a4d4; font-size: 16px; font-weight: bold;")
         else:
-            button.setStyleSheet("color: grey; font-size: 16px;")
-        
+            button.setStyleSheet("color: #838383; font-size: 16px; font-weight: bold;")
+
     def get_string_from_button(self):
         order=""
         for button in self.buttons:
@@ -128,7 +132,7 @@ class NumberSelectorApp(QWidget):
             if text != " ":
                 order += button.text()
         return order
-        
+
     def set_buttons_from_string(self, order):
         #print(order)
         i = 0
@@ -144,12 +148,12 @@ class NumberSelectorApp(QWidget):
     def convert_to_uppercase(self):
         text = self.text_box.text()
         if text == "":
-            self.font.setLetterSpacing(QFont.PercentageSpacing, 100) 
+            self.font.setLetterSpacing(QFont.PercentageSpacing, 100)
         else:
-            self.text_box.setText(text.upper()) 
+            self.text_box.setText(text.upper())
             self.font.setLetterSpacing(QFont.PercentageSpacing, 150)  # Increase letter spacing by 150%
         self.text_box.setFont(self.font)
-        
+
     def on_spinbox_value_changed(self):
         # Get the current values of Lives and Blanks
         lives_value = self.lives_spinbox.value()
@@ -189,10 +193,35 @@ class NumberSelectorApp(QWidget):
             print("New Round")
             self.removed_from_order = ""
 
+def set_theme(app):
+    try:
+        if os.environ.get('DESKTOP_SESSION') == "gnome":
+            try:
+                import subprocess
+                result = subprocess.run(
+                    ['gsettings', 'get', 'org.gnome.desktop.interface', 'color-scheme'],
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    text=True
+                )
+                theme = result.stdout.strip().lower()
+                if 'dark' in theme:
+                    app.setStyle("Adwaita-Dark")
+                else:
+                    app.setStyle("Adwaita")
+            except:
+                app.setStyle("Adwaita")
+    except:
+        pass
+    current_style = app.style().objectName()
+    print(f"Loaded Theme: {current_style}")
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+    set_theme(app)
     window = NumberSelectorApp()
     window.show()
     sys.exit(app.exec_())
+
 
 
