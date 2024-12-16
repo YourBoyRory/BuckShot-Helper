@@ -15,7 +15,7 @@ def getAssetPath(file):
 class NumberSelectorApp(QWidget):
     def __init__(self):
         super().__init__()
-        self.setObjectName("Frame") 
+        self.setObjectName("Frame")
         # Initialize the UI
         self.init_ui()
 
@@ -232,13 +232,12 @@ def set_theme(app):
                 app.setStyle("Adwaita")
     except:
         pass
-    #desktop = ""
     current_style = app.style().objectName()
     if desktop == "" or current_style == "windowsvista":
         desktop = "windows"
         app.setStyle("windows")
         try:
-            with open(getAssetPath("Adwaita.qss"), "r") as f:
+            with open(getAssetPath("Adwaita-Dark.qss"), "r") as f:
                 app.setStyleSheet(f.read())
         except:
             print("Failed to load darkmode")
